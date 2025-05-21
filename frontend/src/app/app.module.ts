@@ -7,11 +7,18 @@ import { ToastrModule } from 'ngx-toastr';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './component/pages/home/home.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { FirebaseConfig } from './config/firebase-config';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { HeaderComponent } from './partials/header/header.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    HeaderComponent
   ],
   imports: [
      BrowserModule,
@@ -19,6 +26,9 @@ import { HomeComponent } from './component/pages/home/home.component';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    AngularFireModule.initializeApp(FirebaseConfig),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-bottom-right',
