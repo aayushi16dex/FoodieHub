@@ -32,10 +32,9 @@ public class FoodCategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponseGet> fetchAllFoodCategory() {
+    public ResponseEntity<ApiResponseGet<List<FoodCategoryGetDto>>> fetchAllFoodCategory() {
         List<FoodCategoryGetDto> foodCategory = foodCategoryService.fetchFoodCategory();
-        ApiResponseGet apiResponse = new ApiResponseGet(
-                1,
+        ApiResponseGet<List<FoodCategoryGetDto>> apiResponse = new ApiResponseGet<>(
                 foodCategory.size(),
                 false,
                 foodCategory

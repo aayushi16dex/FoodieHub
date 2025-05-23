@@ -3,8 +3,11 @@ package com.order.food.exception;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +57,36 @@ public class GlobalExceptionHandler {
         List<String> errors = new ArrayList<>();
         errors.add(error);
         ErrorResponse res = new ErrorResponse(message, errors, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
-
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException ex) {
+        String message = "Validation error";
+        List<String> errors = new ArrayList<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.add(error.getDefaultMessage()));
+        ErrorResponse res = new ErrorResponse(message, errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<?> handleResourceNotFoundErrors(NoResourceFoundException ex) {
+        String message = "Resource not found";
+        String error = ex.getLocalizedMessage();
+        List<String> errors = new ArrayList<>();
+        errors.add(error);
+        ErrorResponse res = new ErrorResponse(message, errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> handleMethodArgumentTypeMismatchErrors(MethodArgumentTypeMismatchException ex) {
+        String message = "Wrong arguments";
+        String error = ex.getLocalizedMessage();
+        List<String> errors = new ArrayList<>();
+        errors.add(error);
+        ErrorResponse res = new ErrorResponse(message, errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+    }
 }

@@ -13,7 +13,6 @@ public class ErrorResponse {
     private List<String> errorDetails;
     private String timestamp;
     private HttpStatus statusCode;
-    private int flag;
 
     public ErrorResponse(String message, List<String> errorDetails, HttpStatus statusCode) {
         this.status = 2;

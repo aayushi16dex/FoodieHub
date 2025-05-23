@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/foodItems")
 public class FoodItemController {
@@ -23,13 +25,12 @@ public class FoodItemController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponseGet> getAllItems(
+    public ResponseEntity<ApiResponseGet<List<FoodItem>>> getAllItems(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "5") int itemPerPage
     ){
         Page<FoodItem> response = foodItemService.getItems(pageNo, itemPerPage);
-        ApiResponseGet apiResponse = new ApiResponseGet(
-                1,
+        ApiResponseGet<List<FoodItem>> apiResponse = new ApiResponseGet<>(
                 response.getTotalElements(),
                 !response.isLast(),
                 response.getContent()
