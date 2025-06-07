@@ -1,2 +1,35 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import "../node_modules/ngx-toastr/toastr.css";
 @import '../node_modules/leaflet/dist/leaflet.css';/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+
+
+
+
+.f-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.f-end{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.v-ceter{
+    display: flex;
+    align-items: center;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}

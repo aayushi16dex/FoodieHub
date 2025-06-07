@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { User } from '../shared/models/User';
-import { IUserLogin } from '../shared/interfaces/IUserLogin';
 import { HttpClient } from '@angular/common/http';
-import { ToastrService } from 'ngx-toastr';
-import { IUserRegister } from '../shared/interfaces/IUserRegister';
-import { IUserUpdateProfile } from '../shared/interfaces/IUserUpdateProfile';
+import { Injectable } from '@angular/core';
+import { GoogleAuthProvider } from '@angular/fire/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from '../shared/models/User';
+import { Dialog } from '@angular/cdk/dialog';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { FormGroup } from '@angular/forms';
 
 const USER_KEY = 'User'; //for local storage
 
@@ -17,13 +19,14 @@ const USER_KEY = 'User'; //for local storage
 export class UserService {
 
   // BehaviorSubject for managing the user state
-  private userSubject = new BehaviorSubject<User>(this.getUserFromLocalStorage());
-  public userObservable: Observable<User>;
+  private userSubject = new BehaviorSubject<any>(undefined);
+  public userObservable: Observable<any>;
 
   constructor(private http: HttpClient,
-     private toastrService: ToastrService,
-      private afAuth: AngularFireAuth,
-    private firestore: AngularFirestore) {
+    private toastrService: ToastrService,
+    private afAuth: AngularFireAuth,
+    private firestore: AngularFirestore,
+    private dialog: Dialog) {
     // Create an observable from the userSubject
     this.userObservable = this.userSubject.asObservable();
   }
@@ -76,26 +79,25 @@ export class UserService {
   //   )
   // }
 
-   async registerWithDetails(userData: Omit<User, 'id' | 'token'>, password: string) {
-    const userCredential = await this.afAuth.createUserWithEmailAndPassword(userData.email, password);
-    if (userCredential.user) {
-      const token = await userCredential.user.getIdToken();
-
-      const user: User = {
-        id: userCredential.user.uid,
-        email: userData.email,
-        name: userData.name,
-        address: userData.address,
-        token: token,
-        isAdmin: false, // default
-        isBlocked: false // default
-      };
-
-      await this.firestore.collection('users').doc(user.id).set(user);
-    }
+   
+    // register method
+  register(formData:any) {
+    const email = formData.email
+    const password = formData.password
+    this.afAuth.createUserWithEmailAndPassword(email, password).then( res => {
+      let user = {
+        displayName:formData.name
+      }
+      this.userSubject.next(user);
+      this.toastrService.success( `Welcome to FoodieHub ${res.user.displayName}!`,
+        'Register Successful')
+    }, err => {
+      this.toastrService.error(err.message)
+    })
   }
 
-  userLogin(email:string,password:string){
+
+  userLogin(email: string, password: string) {
     return this.afAuth.signInWithEmailAndPassword(email, password);
   }
 
@@ -105,6 +107,24 @@ export class UserService {
     localStorage.removeItem(USER_KEY);
     window.location.reload();
   }
+
+  //sign in with google
+  googleSignIn() {
+    return this.afAuth.signInWithPopup(new GoogleAuthProvider).then(res => {
+      this.dialog.closeAll()
+      localStorage.setItem('token', JSON.stringify(res.user?.uid));
+      localStorage.setItem('userData',JSON.stringify(res.user))
+      this.userSubject.next(res.user)
+      this.toastrService.success(
+        `Welcome to FoodieHub ${res.user.displayName}!`,
+        'Register Successful'
+      )
+
+    }, err => {
+      alert(err.message);
+    })
+  }
+
 
   //may require changes
   // Method to update user profile

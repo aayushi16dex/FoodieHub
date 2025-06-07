@@ -8,7 +8,5 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AppComponent {
   title = 'frontend';
-  constructor( private toastrService: ToastrService){
-    this.toastrService.success('Chitranjan')
-  }
+ 
 }

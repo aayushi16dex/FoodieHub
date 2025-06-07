@@ -1,27 +1,45 @@
 <header>
-    <div class="container">
-      <a routerLink="/" class="logo">Food Mine!</a>
-      <nav>
-        <ul>
-          <li *ngIf="!user">
-            <a routerLink="/login">Login</a>
-          </li>
+  <div class="container">
+    <img class="logo" src="assets/logo.jpg" alt="">
+    <nav>
+      <ul>
+        <li *ngIf="!userData">
+          <a (click)="login()">Login</a>
+        </li>
 
-          <li *ngIf="user.token" class="menu-container">
-            <a routerLink="/dashboard">{{user.name}}</a>
-            <div class="menu">
-              <a routerLink="/profile">Profile</a>
-              <a routerLink="/orders">Orders</a>
-              <a (click)="logout()">Logout</a>
+        <li *ngIf="userData?.uid" class="menu-container">
+          <img class="userImg" [cdkMenuTriggerFor]="menu" [src]="userData?.photoURL" alt="">
+          <!-- <div class="menu">
+            <a routerLink="/profile">Profile</a>
+            <a routerLink="/orders">Orders</a>
+            <a (click)="logout()">Logout</a>
+          </div> -->
+          <ng-template #menu>
+            <div class="example-menu" cdkMenu>
+              <button class="example-menu-item"  cdkMenuItem>Hi,{{userData?.displayName}}</button>
+              <button class="example-menu-item" cdkMenuItem>
+                <i class="material-icons">account_circle</i>
+                Profile</button>
+              <button class="example-menu-item" cdkMenuItem>
+                <i class="material-icons">shopping_basket</i>
+              
+                Orders</button>
+              <button class="example-menu-item" (click)="logout()" cdkMenuItem>
+                <i class="material-icons">logout</i>
+                Logout</button>
             </div>
-          </li>
-          
-          <li>
-            <a routerLink="/cart-page">
-              Cart <span *ngIf="cartQuantity">{{cartQuantity}}</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+          </ng-template>
+        </li>
+
+        <li>
+          <a routerLink="/cart-page">
+            <i class="material-icons">
+              shopping_cart
+            </i>
+            <span *ngIf="cartQuantity">{{cartQuantity}}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

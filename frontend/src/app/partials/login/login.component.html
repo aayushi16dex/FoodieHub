@@ -1,0 +1,43 @@
+<div class="container" id="container">
+  <div class="form-container sign-up-container">
+    <i class="material-icons cursor-pointer f-end" (click)="closeLogin()">close</i>
+    <form [formGroup]="signupForm">
+      <h1>Sign Up</h1>
+      <input type="text" formControlName="name" placeholder="Name" />
+      <input type="email" formControlName="email" placeholder="Email" />
+      <input type="password" formControlName="password" placeholder="Password" />
+      <div class="btn-container">
+        <button (click)="signUp()">Sign Up</button>
+        <span>Or</span>
+        <button class="social-signin google" (click)="loginWithGoogle()">Log in with Google+</button>
+      </div>
+    </form>
+
+  </div>
+  <div class="form-container sign-in-container">
+    <i class="material-icons cursor-pointer f-end" (click)="closeLogin()">close</i>
+    <form [formGroup]="loginForm">
+      <h1>Sign In</h1>
+      <input type="email" formControlName="email" placeholder="Email" />
+      <input type="password" formControlName="password" placeholder="Password" />
+      <a href="#">Forgot your password?</a>
+      <button (click)="loginWithCredential()">Sign In</button>
+
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To stay connected with us please login with your personal info</p>
+        <button class="ghost" id="SignIn" (click)="signUpOrSignIn(2)">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hello, Friend!</h1>
+        <p>Enter your personal details and start your journey with us </p>
+        <button class="ghost" id="SignUp" (click)="signUpOrSignIn(1)">Sign Up</button>
+      </div>
+    </div>
+
+  </div>
+</div>
