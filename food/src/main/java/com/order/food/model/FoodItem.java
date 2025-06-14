@@ -13,6 +13,13 @@ public class FoodItem {
     private String foodDescription;
     private double price;
     private String imageUrl;
-    private Long foodCategoryId;
+    @ManyToOne
+    @JoinColumn(name = "food_category_id", referencedColumnName = "id")
+    private FoodCategory foodCategory;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "food_type")
     private FoodType foodType;
+    @Column(nullable = false)
+    private Boolean signatureFood = false;
+
 }

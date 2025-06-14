@@ -5,7 +5,7 @@ import com.order.food.dto.ApiResponseGet;
 import com.order.food.dto.FoodItemDto;
 import com.order.food.exception.RecordNotFoundException;
 import com.order.food.model.FoodItem;
-import com.order.food.service.FoodItemServiceImpl;
+import com.order.food.service.FoodItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,19 +17,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/foodItems")
 public class FoodItemController {
-    FoodItemServiceImpl foodItemService;
+    FoodItemService foodItemService;
 
     @Autowired
-    public FoodItemController(FoodItemServiceImpl foodItemService) {
+    public FoodItemController(FoodItemService foodItemService) {
         this.foodItemService = foodItemService;
     }
 
     @GetMapping
     public ResponseEntity<ApiResponseGet<List<FoodItem>>> getAllItems(
-            @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "5") int itemPerPage
+            @RequestParam(defaultValue = "1") int pageNo,
+            @RequestParam(defaultValue = "20") int itemPerPage,
+            @RequestParam(required = false) String foodType,
+            @RequestParam(required = false) int foodCategoryId,
+            @RequestParam(required = false) Boolean signatureFood
     ){
-        Page<FoodItem> response = foodItemService.getItems(pageNo, itemPerPage);
+        Page<FoodItem> response = foodItemService.getItems(pageNo, itemPerPage, foodType, foodCategoryId, signatureFood);
         ApiResponseGet<List<FoodItem>> apiResponse = new ApiResponseGet<>(
                 response.getTotalElements(),
                 !response.isLast(),

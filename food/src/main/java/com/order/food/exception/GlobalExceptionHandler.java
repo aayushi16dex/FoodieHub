@@ -22,6 +22,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    @ExceptionHandler(InvalidValueException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidValueException(InvalidValueException e){
+        String message = "Invalid value";
+        List<String> errors = new ArrayList<>();
+        errors.add(e.getLocalizedMessage());
+        ErrorResponse res = new ErrorResponse(message, errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
     @ExceptionHandler(IdNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleIdNotFoundException(IdNotFoundException e){
         String message = "Invalid id";
